@@ -25,3 +25,15 @@ allow the image to write to your current directory.
 ```bash
 docker run -it -e SERVER_VERSION=1.16.4 -v $(pwd):/downloads ducoterra/get-minecraft:latest
 ```
+
+## Build
+
+To create a new version increment the version in the VERSION file.
+
+```bash
+# Mac M1 Only
+make buildx-context
+
+make build
+make push
+```
