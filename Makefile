@@ -2,17 +2,26 @@ SHELL := /bin/bash
 
 IMAGE ?= $(shell cat IMAGE):$(shell cat VERSION)
 IMAGE_LATEST ?= $(shell cat IMAGE):latest
+PWD ?= $(shell pwd)
 
 .PHONY: buildx-context
 buildx-context:
-	docker buildx create --name arm64 --use --platform linux/amd64,linux/arm64,linux/arm/v8
+	docker buildx create --name arm64 --use --platform linux/amd64,linux/arm64
+
+.PHONY: buildx-clear
+buildx-clear:
+	docker buildx rm arm64
 
 .PHONY: build
 build:
-	@docker buildx build --platform linux/amd64,linux/arm64 . -t $(IMAGE)
-	@docker buildx build --platform linux/amd64,linux/arm64 . -t $(IMAGE_LATEST) 
+	docker buildx build --load . -t $(IMAGE)
+	@docker buildx build --load . -t $(IMAGE_LATEST) 
 
 .PHONY: push
 push:
-	@docker push $(IMAGE)
-	@docker push $(IMAGE_LATEST)
+	docker buildx build --platform linux/amd64 --push . -t $(IMAGE)
+	@docker buildx build --platform linux/amd64 --push . -t $(IMAGE_LATEST)
+
+.PHONY: run
+run:
+	docker run -it -v $(PWD):/mc_data $(IMAGE) bash
