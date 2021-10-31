@@ -11,7 +11,7 @@ VERSION_FILE = "SERVER_VERSION"
 def get_latest_version(latest):
     return latest.get(RELEASE)
 
-def get_version(versions, latest, id):
+def get_version_data(versions, latest, id):
     if id == LATEST:
         id = get_latest_version(latest)
 
@@ -26,9 +26,16 @@ def get_version(versions, latest, id):
     else:
         raise ValueError(f"Version {id} had no matches.")
 
-def write_version_file(version):
+def get_metadata_from_version(version):
+    metadata = requests.get(version.get('url'))
+    return json.loads(metadata.text)
+
+def get_server_url_from_metadata(metadata):
+    return metadata['downloads']['server']['url']
+
+def write_url_file(url):
     with open(VERSION_FILE, "w") as f:
-        return f.write(version.get('url'))
+        return f.write(url)
 
 if __name__ == "__main__":
     version_manifest = requests.get("https://launchermeta.mojang.com/mc/game/version_manifest_v2.json")
@@ -37,6 +44,8 @@ if __name__ == "__main__":
     latest = version_json.get(LATEST)
 
     print(f"Attempting to get version {REQUESTED_VERSION}.")
-    version = get_version(versions, latest, REQUESTED_VERSION)
+    version = get_version_data(versions, latest, REQUESTED_VERSION)
+    metadata = get_metadata_from_version(version)
+    url = get_server_url_from_metadata(metadata)
     print(f"Found, writing url to VERSION file.")
-    write_version_file(version)
+    write_url_file(url)
