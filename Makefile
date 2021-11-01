@@ -4,6 +4,7 @@ IMAGE ?= $(shell cat IMAGE):$(shell cat VERSION)
 IMAGE_LATEST ?= $(shell cat IMAGE):latest
 PWD ?= $(shell pwd)
 
-include make/docker.makefile
-include make/kaniko.makefile
-include make/truenas.makefile
+include .gitlab/make/docker.makefile
+include .gitlab/make/helm.makefile
+include .gitlab/make/kaniko.makefile
+include .gitlab/make/truenas.makefile
