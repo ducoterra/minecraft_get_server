@@ -1,1 +1,1 @@
-include .common/Makefile
+include .gitlab/Makefile
