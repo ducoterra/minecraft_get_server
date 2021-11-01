@@ -6,7 +6,7 @@ LATEST = "latest"
 RELEASE = "release"
 SNAPSHOT = "snapshot"
 REQUESTED_VERSION = os.getenv("SERVER_VERSION", LATEST)
-VERSION_FILE = "SERVER_VERSION"
+JARFILE = "server.jar"
 
 def get_latest_version(latest):
     return latest.get(RELEASE)
@@ -33,9 +33,9 @@ def get_metadata_from_version(version):
 def get_server_url_from_metadata(metadata):
     return metadata['downloads']['server']['url']
 
-def write_url_file(url):
-    with open(VERSION_FILE, "w") as f:
-        return f.write(url)
+def write_server_jar(file):
+    with open(JARFILE, "wb") as f:
+        return f.write(file)
 
 if __name__ == "__main__":
     version_manifest = requests.get("https://launchermeta.mojang.com/mc/game/version_manifest_v2.json")
@@ -47,5 +47,6 @@ if __name__ == "__main__":
     version = get_version_data(versions, latest, REQUESTED_VERSION)
     metadata = get_metadata_from_version(version)
     url = get_server_url_from_metadata(metadata)
-    print(f"Found, writing url to VERSION file.")
-    write_url_file(url)
+    print(f"Downloading from URL for {REQUESTED_VERSION} at {url}.")
+    server_jar = requests.get(url)
+    write_server_jar(server_jar.content)
