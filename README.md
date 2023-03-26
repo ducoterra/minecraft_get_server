@@ -31,9 +31,7 @@ docker run -it -e SERVER_VERSION=1.16.4 -v $(pwd):/downloads ducoterra/get-minec
 To create a new version increment the version in the VERSION file.
 
 ```bash
-# Mac M1 Only
-make buildx-context
-
 make build
-make push
 ```
+
+## Deploy
