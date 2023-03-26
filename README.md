@@ -7,7 +7,7 @@ Get the url for any minecraft server version
 ### Python
 
 Since this script is designed to be used in Docker it works with
-environment variables. Set SERVER_VERSION=<desired version> and
+environment variables. Set SERVER_VERSION=`desired version` and
 get_server.py will write a file called "SERVER_VERSION" with the url
 to download the version requested.
 
@@ -31,9 +31,13 @@ docker run -it -e SERVER_VERSION=1.16.4 -v $(pwd):/downloads ducoterra/get-minec
 To create a new version increment the version in the VERSION file.
 
 ```bash
-# Mac M1 Only
-make buildx-context
-
 make build
+```
+
+## Deploy
+
+To deploy a built version, run
+
+```bash
 make push
 ```
